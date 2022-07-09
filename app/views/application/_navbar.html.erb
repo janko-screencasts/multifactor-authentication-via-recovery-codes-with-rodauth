@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom mb-4">
+  <div class="container">
+    <%= link_to "Rails App", root_path, class: "navbar-brand" %>
+
+    <div class="navbar-collapse">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <%= link_to "Articles", articles_path, class: "nav-link #{"active" if request.path.start_with?("/articles")}" %>
+        </li>
+      </ul>
+    </div>
+
+    <% if rodauth.authenticated? %>
+      <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" type="button">
+          Account (<%= rodauth.authenticated_by.join(", ") %>)
+        </button>
+        <div class="dropdown-menu dropdown-menu-end">
+          <%= link_to "Change password", rodauth.change_password_path, class: "dropdown-item" %>
+          <%= link_to "Change email", rodauth.change_login_path, class: "dropdown-item" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to "Manage MFA", rodauth.two_factor_manage_path, class: "dropdown-item" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to "Close account", rodauth.close_account_path, class: "dropdown-item text-danger" %>
+          <%= link_to "Sign out", rodauth.logout_path, data: { turbo_method: :post }, class: "dropdown-item" %>
+        </div>
+      </div>
+    <% else %>
+      <div>
+        <%= link_to "Sign in", rodauth.login_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Sign up", rodauth.create_account_path, class: "btn btn-success" %>
+      </div>
+    <% end %>
+  </div>
+</nav>
