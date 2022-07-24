@@ -5,7 +5,7 @@ class RodauthMain < Rodauth::Rails::Auth
       :login, :logout, :remember,
       :reset_password, :change_password, :change_password_notify,
       :change_login, :verify_login_change, :close_account,
-      :otp
+      :otp, :recovery_codes
 
     # See the Rodauth documentation for the list of available config options:
     # http://rodauth.jeremyevans.net/documentation.html
@@ -129,5 +129,15 @@ class RodauthMain < Rodauth::Rails::Auth
     # reset_password_deadline_interval Hash[hours: 6]
     # verify_login_change_deadline_interval Hash[days: 2]
     # remember_deadline_interval Hash[days: 30]
+
+    auto_add_recovery_codes? true
+    auto_remove_recovery_codes? true
+
+    after_otp_setup do
+      set_notice_now_flash "#{otp_setup_notice_flash}, please make note of your recovery codes"
+      return_response add_recovery_codes_view
+    end
+
+    new_recovery_code { SecureRandom.uuid }
   end
 end

@@ -1,0 +1,20 @@
+<% if rodauth.recovery_codes.any? %>
+  <p class="my-3">
+    Copy these recovery codes to a safe location.
+    You can also download them <%= link_to "here", "data:,#{rodauth.recovery_codes.join("\n")}", download: "myapp-recovery-codes.txt" %>.
+  </p>
+
+  <div class="d-inline-block mb-3 border border-primary rounded px-3 py-2">
+    <% rodauth.recovery_codes.each_slice(2) do |code1, code2| %>
+      <div class="row text-primary text-left">
+        <div class="col-lg my-1 font-monospace"><%= code1 %></div>
+        <div class="col-lg my-1 font-monospace"><%= code2 %></div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if rodauth.can_add_recovery_codes? %>
+  <%== rodauth.add_recovery_codes_heading %>
+  <%= render template: "rodauth/recovery_codes", layout: false %>
+<% end %>
